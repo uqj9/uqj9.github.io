@@ -19,6 +19,7 @@
 
     <div id="welcome-text">
       <p>
+        My name is Emily Moxley.<br>
         Welcome to my webpage.<br>
         I am a student in the
         <a href="https://www.geo.txstate.edu/" target="_blank">Geography Department</a> at
@@ -37,6 +38,19 @@
       </p>
     </div>
     <script src="javascript/external.js"></script>
+
+    <div id="copyright">
+      <script>
+       // Creates a new Date object using the current date and time.
+       var today = new Date();
+
+       // Gets the current four-digit year from the Date object.
+       var year = today.getFullYear();
+
+       // Writes the copyright symbol and current year onto the webpage.
+       document.writeln("Copyright &copy; " + year);
+      </script>
+    </div>
 
   </div>
 </body>
