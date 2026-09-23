@@ -47,6 +47,7 @@ h1 {
   font-size: 25px;
   position: relative;
   left: 50px;
+  overflow: hidden;
 }
 
 #copyright {
