@@ -74,8 +74,7 @@
       //    id: 'mapbox/dark-v11',
       //    accessToken: mapbox_access_token
   //    }).addTo(mymap);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-      }).addTo(mymap);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19}).addTo(mymap);
 
       var marker = L.marker([51.5, -0.09]).addTo(mymap);
       var circle = L.circle([51.508, -0.11], {
