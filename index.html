@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
   <link rel="stylesheet" type="text/css" href="css/map_style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-
+  <link rel="stylesheet" href="https://api.mapbox.js/v3.3.1/mapbox.css">
+  <script src="https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js"></script>
   <scrpit src="javascript/secret_keys.js"></script>
 
   <title>Emily Moxley</title>
@@ -68,9 +69,10 @@
       <script>
         var mymap = L.map('mapid');
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors'
+      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+          maxZoom: 18,
+          id: 'mapbox/dark-v10',
+          accessToken: mapbox_access_token
       }).addTo(mymap);
 
       var marker = L.marker([51.5, -0.09]).addTo(mymap);
