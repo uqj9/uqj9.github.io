@@ -90,6 +90,30 @@
         ]);
         mymap.fitBounds(poly.getBounds());
       }).addTo(mymap);
+      var wonders = [
+  {name: "Taj Mahal", icon: "🕌", pos: [27.174961, 78.042385], img: "images/taj-mahal.jpg",
+   text: "A white marble mausoleum in Agra, India, built between 1632 by the Mughal emporer Shah Jahan in memory of his wife Mumtaz Mahal. It is famous for its symmetry, its centraldome, and its intricate inlay work."},
+  {name: "Great Wall of China", icon: "🏯", pos: [40.334245, 116.477652], img: "images/great-wall.jpg",
+   text: "A series of fortifications stretching thousands of kilometers across northern China, built and rebuilt over many centuries to defend against invasions. The best-preserved sections, like this one near Beijing, date mostly from the Ming dynasty."},
+  {name: "Petra", icon: "🏜️", pos: [30.328611, 35.441944], img: "images/petra.jpg",
+   text: "The ancient capital of the Nabataean kingdom in southern Jordan, carved into rose-colored sandstone cliffs. Its most famous monument is Al-Khazneh, or the Treasury, which visitors reach through a narrow canyon called the Siq."},
+  {name: "Christ the Redeemer", icon: "⛪", pos: [-22.951389, -43.2108334], img: "images/christ-redeemer.jpg",
+   text: "An Art Deco statue of Jesus Christ standing about 30 meters tall on Corcovado Mountain, overlooking Rio de Janeiro. It was completed in 1931 and has become a symbol of both the city and Brazilian Christianity."},
+  {name: "Machu Picchu", icon: "⛰️", pos: [-13.163056, -72.545556], img: "images/machu-picchu.jpg",
+   text: "A 15th-century Inca citadel located high in the Andes Mountains of Peru. Abandoned during the Spanish conquest, it gained attention in 1911 and is known for its stone terraces and precise masonry."},
+  {name: "Chichen Itza", icon: "🔺", pos: [20.682778, -88.569167], img: "images/chichen-itza.jpg",
+   text: "A major Maya city on Mexico's Yucatan Peninsula, best known for the step pyramid El Castillo. During the spring and autumn equinoxes, shadows on its staircase create the look of a snake going down the pyramid."},
+  {name: "The Colosseum", icon: "🏛️", pos: [41.890169, 12.492269], img: "images/colosseum.jpg",
+   text: "A massive amphitheater in the middle of Rome, it was completed in AD 80 and able to hold around 50,000 people. It hosted gladiator contests and public spectacles, and it is one of the best-preserved symbols of Roman engineering."}
+];
+
+wonders.forEach(function(w) {
+  var icon = L.divIcon({className: 'wonder-icon', html: w.icon, iconSize: [32, 32]});
+  L.marker(w.pos, {icon: icon}).addTo(mymap).bindPopup(
+    '<b>' + w.name + '</b><br><img src="' + w.img + '" width="200"><br>' + w.text,
+    {className: 'wonder-popup', maxWidth: 220}
+  );
+});
     //  var marker = L.marker([51.5, -0.09]).addTo(mymap);
     //  var circle = L.circle([51.508, -0.11], {
     //    color: 'red',

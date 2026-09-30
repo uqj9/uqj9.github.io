@@ -1,5 +1,11 @@
-.leaflet-popup-content-wrapper,
-.leaflet-popup-toinput
-{
-  background: yellow;
+.wonder-popup .leaflet-popup-content-wrapper,
+.wonder-popup .leaflet-popup-tip {
+  bacground: #fdf6e3;
+  border: 2px solid #8b5a2b;
+  border-radius: 8px;
+  font-family: Georgia, serif;
+}
+.wonder-icon {
+  font-size: 26px;
+  text-align: center;
 }
