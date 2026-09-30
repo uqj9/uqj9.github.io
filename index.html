@@ -69,10 +69,12 @@
       <script>
         var mymap = L.map('mapid');
 
-      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-          maxZoom: 18,
-          id: 'mapbox/dark-v11',
-          accessToken: mapbox_access_token
+      // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      //    maxZoom: 18,
+      //    id: 'mapbox/dark-v11',
+      //    accessToken: mapbox_access_token
+  //    }).addTo(mymap);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
       }).addTo(mymap);
 
       var marker = L.marker([51.5, -0.09]).addTo(mymap);
