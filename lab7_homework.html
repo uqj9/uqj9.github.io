@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content = "initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <title> National Parks Explorer </title>
+
+  <link rel = "stylesheet" href = "https://js.arcgis.com/4.21/esri/themes/light/main.css"/>
+  <script src = "https://js.arcgis.com/4.21/"> </script>
+
+  <style>
+  #navigation {
+    position: absolute;
+    top: 15px;
+    left: 60px;
+    z-index: 10;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  #footer {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index:10;
+      background-color: rgba(40, 40, 40, 0.85);
+      color: white;
+      padding: 8px 15px;
+      border-radius:5px;
+      font-size: 12px;
+      text-align: center;
+  }
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #optionsDiv{
+        background-color: dimgray;
+        color: white;
+        padding: 10px;
+        width: 350px;
+     }
+     .esri-popup .esri-popup-header .esri-title {
+         font-size: 18px;
+         font-weight: bolder;
+     }
+     .esri-popup .esri-popup-body .esri-popup-content {
+         font-size: 14px;
+     }
+  </style>
+
+  <script>
+    require(["esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/layers/MapImageLayer", "esri/layers/FeatureLayer", "esri/widgets/BasemapGallery", "esri/layers/GraphicsLayer", "esri/tasks/QueryTask", "esri/tasks/support/Query", "dojo/_base/array", "dojo/dom", "dojo/on", "dojo/domReady!"],
+    function
+      (Map, MapView, TileLayer, MapImageLayer, FeatureLayer, BasemapGallery, GraphicsLayer, QueryTask, Query, arrayUtils, dom, on) {
+         var CitiesRenderer = {
+           type: "simple",
+           symbol: {
+            type: "simple-marker",
+            size: 3,
+            color: "red",
+            style: "circle",
+             outline:{
+             width: 1,
+             color: "red"
+        }
+      },
+      label: "Cities"
+    };
+
+    var CitiesLayer = new MapImageLayer({
+      url:"https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer",
+      sublayers: [{
+        id: 0,
+        renderer: CitiesRenderer,
+        opacity: 0.4
+      }]
+    });
+      var TransportationLayer = new TileLayer({
+        url: "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer"
+      });
+      // Load National Park Service trail datafrom ArcGIS Online.
+      // This layer displays trails when the webpage first loads.
+      var parksLayer = new FeatureLayer({
+          url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/NPS_Trails_and_Boundaries/FeatureServer/0",
+          title: "National Park Trails",
+          outFields: ["*"]
+      });
+      var map = new Map({
+        basemap: "oceans",
+        layers: [TransportationLayer, parksLayer]
+      });
+
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        zoom: 4,
+        center: [-98.5795, 39.8283]
+      });
+     var basemapGallery = new BasemapGallery({
+         view: view
+     });
+
+     view.ui.add(basemapGallery, {
+         position: "top-right"
+     });
+
+     view.when(function(){
+         view.ui.add("optionsDiv", "bottom-right");
+          on(dom.byId("doBtn"), "click", doQuery);
+      });
+      var stateSelect = dom.byId("stateSelect");
+      // Search for national park trails using the selected trail type.
+      // Clear previous results before running the new query.
+      // The matching trails are then passed to getResults().
+      function doQuery(){
+          resultsLayer.removeAll();
+          params.where = "TRLTYPE = '" + stateSelect.value + "'";
+          qTask.execute(params).then(getResults).catch(promiseRejected);
+        }
+        // Process the trails returned by the query.
+        // Add popup information to each matching trail.
+        // Display the results and automatically move the map to show them.
+        function getResults(response){
+          var popResults = arrayUtils.map(
+              response.features,
+              function(feature){
+                feature.popupTemplate = popupTemplate;
+                return feature;;
+              }
+          );
+          resultsLayer.addMany(popResults);
+          view.goTo(popResults).then(function(){
+            view.popup.open({
+              features: popResults,
+              featureMenuOpen: true,
+              updateLocationEnabled: true
+          });
+        });
+        dom.byId("printResults").innerHTML = popResults.length + " results found!";
+    };
+    function promiseRejected(error){
+      console.error("Query error:", error.message);
+      dom.byId("printResults").textContent =
+          "Unable to complete the park search.";
+    }
+    var popUrl = "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/NPS_Trails_and_Boundaries/FeatureServer/0";
+
+    var popupTemplate = {
+        title: "{TRLNAME}",
+        content: "<b>Park:</b> {UNITNAME}" +
+                 "<br><b>Trail:</b> {TRLNAME}" +
+                 "<br><b>Trail Type:</b> {TRLTYPE}" +
+                 "<br><b>Surface:</b> {TRLSURFACE}"
+    };
+    var resultsLayer = new GraphicsLayer();
+    var qTask = new QueryTask({ url: popUrl });
+    var params = new Query({ returnGeometry: true, outFields: ["*"] });
+});
+   </script>
+</head>
+<body>
+  <div id="navigation">
+<label for="labPages">Lab 7 Pages: </label>
+<select id="labPages"
+onchange="if (this. value) window. open (this. value, '_blank')">
+<option value="">Select a page...</option>
+<option value="simple_mapping.html">Simple Mapping</option>
+<option value="tile_layer.html">TileLayer</option>
+<option value="dynamic_layers. html">Dynamic Layers</option>
+<option value="on_event. html">onEvent</option>
+<option value="basemap_gallery.htm1">BasemapGallery</option>
+<option value="query_task html">Query Task</option>
+</select>
+</div>
+  <div id="viewDiv"></div>
+  <div class="esri-widget" id="optionsDiv">
+<h2>National Parks & Trails Explorer</h2>
+<p>Find national park trails by type:</p>
+
+<select class="esri-widget" id="stateSelect">
+<option value="Standard Terra Trail">Standard Terra Trail</option>
+<option value="Snow Trail">Snow Trail</option>
+<option value="Pedestrian Path">Pedestrian Path</option>
+<option value="Trail">Trail</option>
+<option value="Sidewalk">Sidewalk</option>
+<option value="FL">Florida</option>
+</select>
+<br><br>
+<button class="esri-widget" id="doBtn">Find Trails</button>
+<p><span id="printResults"></span></p>
+</div>
+<div id="footer">
+    &copy; 2026 National Prks & Trails Explorer | Data: Esri / NPS
+</body>
+</html>
